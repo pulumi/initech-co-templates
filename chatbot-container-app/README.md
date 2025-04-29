@@ -19,7 +19,7 @@ This template deploys a containerized chatbot application to AWS ECS Fargate wit
 
 1. Create a new project using this template:
    ```bash
-   pulumi new container-app
+   GITHUB_TOKEN=$(gh auth token) pulumi new https://github.com/pulumi/initech-co-templates/chatbot-container-app
    ```
 
 2. Configure your application:
@@ -67,13 +67,14 @@ This template deploys a containerized chatbot application to AWS ECS Fargate wit
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
 | `aws:region` | `string` | No | us-west-2 | The AWS region to deploy into |
-| `app_port` | `number` | Yes | 8080 | Port the application listens on |
-| `app_path` | `string` | Yes | ./app | Path to the application code directory |
-| `environment` | `string` | No | dev | The environment name (dev, prod, etc.) |
+| `app_port` | `string` | No | "8080" | Port the application listens on |
+| `app_path` | `string` | No | "./app" | Path to the application code directory. Either this or image must be provided, but not both. |
+| `environment` | `string` | No | "dev" | The environment name (dev, prod, etc.) |
 | `cpu` | `string` | No | "256" | CPU units for the container (256 = 0.25 vCPU) |
 | `memory` | `string` | No | "512" | Memory in MB for the container |
-| `desired_count` | `number` | No | 1 | Number of tasks to run |
+| `desired_count` | `string` | No | "1" | Number of tasks to run |
 | `owner` | `string` | No | - | Owner tag value for all resources |
+| `image` | `string` | No | - | Docker image to use. Either this or app_path must be provided, but not both. |
 | `openai_api_key` | `string` | Yes | - | Your OpenAI API key (stored as a secret) |
 
 ### Outputs
@@ -130,5 +131,5 @@ The template creates the following AWS resources:
    - CloudWatch Log Group
 
 6. **Container Registry**
-   - ECR Repository
-   - Docker image build and push 
+   - ECR Repository (only when using app_path)
+   - Docker image build and push (only when using app_path) 
