@@ -33,6 +33,7 @@ template:
       secret: true
     image:
       description: The Docker image to use. Either this or app_path must be provided, but not both.
+      default: none
     owner:
       description: The owner tag value
 resources:
