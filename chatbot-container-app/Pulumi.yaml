@@ -18,6 +18,7 @@ template:
       default: ./app
     image:
       description: The Docker image to use. Either this or app_path must be provided, but not both.
+      default: ""
     environment:
       description: The environment name (e.g., dev, prod)
       default: dev
