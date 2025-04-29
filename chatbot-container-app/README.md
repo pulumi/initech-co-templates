@@ -9,7 +9,7 @@ This template deploys a containerized chatbot application to AWS ECS Fargate wit
 - Sets up an Application Load Balancer
 - Configures CloudWatch logging
 - Supports environment variables and secrets
-- Automatic container image building and pushing to ECR (optional)
+- Automatic container image building and pushing to ECR
 - Resource tagging with owner information
 - ECS service metrics dashboard access
 - Secure networking with restricted VPC access
@@ -23,32 +23,18 @@ This template deploys a containerized chatbot application to AWS ECS Fargate wit
    ```
 
 2. Configure your application:
-   - Option 1: Using application code directory
-     - Place your chatbot application code in the `app` directory
-     - Update the configuration values as needed:
-       ```bash
-       pulumi config set aws:region us-west-2
-       pulumi config set app_port 8080
-       pulumi config set app_path ./app
-       pulumi config set environment dev
-       pulumi config set cpu 256
-       pulumi config set memory 512
-       pulumi config set desired_count 1
-       pulumi config set owner "your-team-name"
-       ```
-
-   - Option 2: Using an existing Docker image
-     - Update the configuration values as needed:
-       ```bash
-       pulumi config set aws:region us-west-2
-       pulumi config set app_port 8080
-       pulumi config set image "your-registry/your-image:tag"
-       pulumi config set environment dev
-       pulumi config set cpu 256
-       pulumi config set memory 512
-       pulumi config set desired_count 1
-       pulumi config set owner "your-team-name"
-       ```
+   - Place your chatbot application code in the `app` directory
+   - Update the configuration values as needed:
+     ```bash
+     pulumi config set aws:region us-west-2
+     pulumi config set app_port 8080
+     pulumi config set app_path ./app
+     pulumi config set environment dev
+     pulumi config set cpu 256
+     pulumi config set memory 512
+     pulumi config set desired_count 1
+     pulumi config set owner "your-team-name"
+     ```
 
 3. Configure your OpenAI API key and AWS credentials:
    - Option 1: Set the OpenAI API key directly and configure AWS credentials separately:
@@ -75,6 +61,44 @@ This template deploys a containerized chatbot application to AWS ECS Fargate wit
    ```bash
    pulumi up
    ```
+
+## Configuration Options
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `aws:region` | `string` | No | us-west-2 | The AWS region to deploy into |
+| `app_port` | `number` | Yes | 8080 | Port the application listens on |
+| `app_path` | `string` | Yes | ./app | Path to the application code directory |
+| `environment` | `string` | No | dev | The environment name (dev, prod, etc.) |
+| `cpu` | `string` | No | "256" | CPU units for the container (256 = 0.25 vCPU) |
+| `memory` | `string` | No | "512" | Memory in MB for the container |
+| `desired_count` | `number` | No | 1 | Number of tasks to run |
+| `owner` | `string` | No | - | Owner tag value for all resources |
+| `openai_api_key` | `string` | Yes | - | Your OpenAI API key (stored as a secret) |
+
+### Outputs
+
+| Name | Type | Description |
+|------|------|-------------|
+| `url` | `string` | The URL of the deployed application |
+| `metricsUrl` | `string` | The URL to the ECS service metrics dashboard |
+
+### Environment Variables
+
+The following environment variables are automatically set for your container:
+
+| Name | Description |
+|------|-------------|
+| `ENVIRONMENT` | The environment name (dev, prod, etc.) |
+| `OPENAI_API_KEY` | Your OpenAI API key (stored securely in AWS Secrets Manager) |
+
+### Security Considerations
+
+- All resources are tagged with `Name` and optionally `Owner`
+- Secrets are stored in AWS Secrets Manager
+- IAM roles follow least privilege principle
+- Network access is restricted to VPC CIDR
+- HTTPS is supported when `alb_cert_arn` is provided
 
 ## Resource Creation
 
@@ -105,47 +129,6 @@ The template creates the following AWS resources:
 5. **Monitoring**
    - CloudWatch Log Group
 
-6. **Container Registry** (only when using app_path)
+6. **Container Registry**
    - ECR Repository
-   - Docker image build and push
-
-## Configuration Options
-
-| Name | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| `aws:region` | `string` | No | us-west-2 | The AWS region to deploy into |
-| `app_port` | `number` | Yes | 8080 | Port the application listens on |
-| `app_path` | `string` | No* | ./app | Path to the application code directory |
-| `image` | `string` | No* | - | Docker image to use instead of building from app_path |
-| `environment` | `string` | No | dev | The environment name (dev, prod, etc.) |
-| `cpu` | `string` | No | "256" | CPU units for the container (256 = 0.25 vCPU) |
-| `memory` | `string` | No | "512" | Memory in MB for the container |
-| `desired_count` | `number` | No | 1 | Number of tasks to run |
-| `owner` | `string` | No | - | Owner tag value for all resources |
-| `openai_api_key` | `string` | Yes | - | Your OpenAI API key (stored as a secret) |
-
-\* Either `app_path` or `image` must be provided, but not both.
-
-### Outputs
-
-| Name | Type | Description |
-|------|------|-------------|
-| `url` | `string` | The URL of the deployed application |
-| `metricsUrl` | `string` | The URL to the ECS service metrics dashboard |
-
-### Environment Variables
-
-The following environment variables are automatically set for your container:
-
-| Name | Description |
-|------|-------------|
-| `ENVIRONMENT` | The environment name (dev, prod, etc.) |
-| `OPENAI_API_KEY` | Your OpenAI API key (stored securely in AWS Secrets Manager) |
-
-### Security Considerations
-
-- All resources are tagged with `Name` and optionally `Owner`
-- Secrets are stored in AWS Secrets Manager
-- IAM roles follow least privilege principle
-- Network access is restricted to VPC CIDR
-- HTTPS is supported when `alb_cert_arn` is provided 
+   - Docker image build and push 

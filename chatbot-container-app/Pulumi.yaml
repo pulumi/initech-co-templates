@@ -14,11 +14,8 @@ template:
       description: The port your application listens on
       default: "8080"
     app_path:
-      description: The path to your application code. Either this or image must be provided, but not both.
+      description: The path to your application code
       default: ./app
-    image:
-      description: The Docker image to use. Either this or app_path must be provided, but not both.
-      default: ""
     environment:
       description: The environment name (e.g., dev, prod)
       default: dev
@@ -40,7 +37,6 @@ resources:
     type: container-app:index:ContainerApp
     properties:
       appPath: ${app_path}
-      image: ${image}
       appPort: ${app_port}
       cpu: ${cpu}
       memory: ${memory}
