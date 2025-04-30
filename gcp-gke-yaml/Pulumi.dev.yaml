@@ -1,0 +1,3 @@
+environment:
+  - gcp-access
+  - stackmgmt

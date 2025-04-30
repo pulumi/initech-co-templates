@@ -1,0 +1,5 @@
+environment:
+  # OIDC AWS access.
+  - cloud-access/aws-access
+  # Config used for the stack settings.
+  - stackmgmt

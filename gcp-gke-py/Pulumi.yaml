@@ -1,0 +1,27 @@
+name: ${PROJECT}
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: ${DESCRIPTION}
+packages:
+  component-gke: https://github.com/pulumi-pequod/component-gke@v0.0.6
+  stackmgmt: https://github.com/pulumi-pequod/component-stackmgmt@v1.0.1
+template:
+  description: Pulumi program that uses a Pulumi Component to deploy a Google Kubernetes Engine (GKE) cluster and canary deployment
+  config:
+    gcp:zone: 
+      description: GCP zone to deploy into.
+      default: us-central1-a    
+    masterVersion:
+      description: K8s version to use. Latest supported version is used if not set.
+    nodeMachineType:
+      description: Node type to use.
+      default: n1-standard-1
+    nodeCount:
+      description: Desired number of nodes in the cluster
+      default: 3
+    driftManagement:
+      description: Set to "Refresh" to periodically refresh state or set to "Correct" to also run an update after refresh.
+      default: Correct
+
