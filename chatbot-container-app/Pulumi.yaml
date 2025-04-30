@@ -31,6 +31,9 @@ template:
     openai_api_key:
       description: Your OpenAI API key
       secret: true
+    system_prompt:
+      description: The system prompt that defines the chatbot's behavior and personality
+      default: "You are a helpful AI assistant."
     image:
       description: The Docker image to use. Either this or app_path must be provided, but not both.
       default: none
@@ -49,6 +52,7 @@ resources:
       owner: ${owner}
       env:
         ENVIRONMENT: ${environment}
+        SYSTEM_PROMPT: ${system_prompt}
       desiredCount: ${desired_count}
       secrets:
         OPENAI_API_KEY: ${openai_api_key}

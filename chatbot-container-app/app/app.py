@@ -9,6 +9,9 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 if not client.api_key:
     raise RuntimeError("OpenAI API key not found. Please set OPENAI_API_KEY environment variable.")
 
+# Get system prompt from environment variable
+SYSTEM_PROMPT = os.getenv("SYSTEM_PROMPT", "You are a helpful AI assistant.")
+
 @app.route("/", methods=["GET"])
 def health_check():
     """Simple health check endpoint for the load balancer."""
@@ -29,7 +32,10 @@ def chat():
         # Call the OpenAI ChatCompletion API with the prompt using the new client interface
         response = client.chat.completions.create(
             model=model,
-            messages=[{"role": "user", "content": prompt}]
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": prompt}
+            ]
         )
         # Extract the assistant's reply from the API response
         answer = response.choices[0].message.content

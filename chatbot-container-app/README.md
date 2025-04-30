@@ -14,6 +14,7 @@ This template deploys a containerized chatbot application to AWS ECS Fargate wit
 - ECS service metrics dashboard access
 - Secure networking with restricted VPC access
 - Secure handling of OpenAI API key
+- Configurable system prompt for chatbot behavior
 
 ## Usage
 
@@ -76,6 +77,7 @@ This template deploys a containerized chatbot application to AWS ECS Fargate wit
 | `owner` | `string` | No | - | Owner tag value for all resources |
 | `image` | `string` | No | - | Docker image to use. Either this or app_path must be provided, but not both. |
 | `openai_api_key` | `string` | Yes | - | Your OpenAI API key (stored as a secret) |
+| `system_prompt` | `string` | No | "You are a helpful AI assistant." | The system prompt that defines the chatbot's behavior and personality. Only used when using app_path. |
 
 ### Outputs
 
@@ -92,6 +94,7 @@ The following environment variables are automatically set for your container:
 |------|-------------|
 | `ENVIRONMENT` | The environment name (dev, prod, etc.) |
 | `OPENAI_API_KEY` | Your OpenAI API key (stored securely in AWS Secrets Manager) |
+| `SYSTEM_PROMPT` | The system prompt that defines the chatbot's behavior (only set when using app_path) |
 
 ### Security Considerations
 
