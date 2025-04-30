@@ -1,0 +1,15 @@
+name: ${PROJECT}
+description: ${DESCRIPTION}
+runtime: python
+packages:
+  container-services: https://github.com/pulumi-pequod/component-container-services@v1.0.1
+  stackmgmt: https://github.com/pulumi-pequod/component-stackmgmt@v1.0.1
+template:
+  description: Pulumi Python project that deploys an application using the container-services component (written in Typescript).
+  config:
+    cpu:
+      description: CPU in vCPUs. See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html 
+      default: 256
+    memory:
+      description: Memory in MiB
+      default: 512

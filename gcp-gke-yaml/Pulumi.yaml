@@ -1,0 +1,61 @@
+name: ${PROJECT}
+runtime: yaml
+description: ${DESCRIPTION}
+packages:
+  component-gke: https://github.com/pulumi-pequod/component-gke@v0.0.6
+  stackmgmt: https://github.com/pulumi-pequod/component-stackmgmt@v1.0.1
+template:
+  description: Pulumi program that uses a Pulumi Component to deploy a Google Kubernetes Engine (GKE) cluster and canary deployment
+  config:
+    gcp:zone: 
+      description: GCP zone to deploy into.
+      default: us-central1-a    
+    nodeMachineType:
+      description: Node type to use.
+      default: n1-standard-1
+    nodeCount:
+      description: Desired number of nodes in the cluster
+      default: 3
+variables:
+  masterVersion:
+    fn::invoke:
+      function: gcp:container:getEngineVersions
+config:
+  base_name:
+    type: string
+    default: ${pulumi.project}
+  service_name:
+    type: string
+    default: ${pulumi.project}
+  nodeMachineType:
+    type: string
+    default: n1-standard-1
+  nodeCount:
+    type: integer
+    default: 3
+
+resources:
+  gke:
+    type: gke:Cluster
+    properties:
+      masterVersion: ${masterVersion.latestMasterVersion}
+      nodeCount: ${nodeCount}
+      nodeMachineType: ${nodeMachineType}
+  k8sProvider: 
+    type: pulumi:providers:kubernetes
+    properties:
+      kubeconfig: ${gke.kubeconfig}
+      deleteUnreachable: true
+  cluster-test:
+    type: kubernetes:core/v1:Namespace
+    options:
+      provider: ${k8sProvider}
+
+  # stacksettings:
+  #   type: stackmgmt:StackSettings 
+
+
+outputs:
+  kubeconfig: ${gke.kubeconfig}
+  clusterName: ${gke.clusterName}
+  nameSpace: ${cluster-test.id}

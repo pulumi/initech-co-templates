@@ -1,0 +1,35 @@
+name: ${PROJECT}
+description: ${DESCRIPTION}
+runtime: yaml
+packages:
+  container-services: https://github.com/pulumi-pequod/component-container-services@v1.0.1
+  stackmgmt: https://github.com/pulumi-pequod/component-stackmgmt@v1.0.1
+template:
+  description: Pulumi YAML project that deploys an application using the container-services component.
+  config:
+    cpu:
+      description: CPU in vCPUs. See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html 
+      default: 256
+    memory:
+      description: Memory in MiB
+      default: 512
+
+resources:
+  appImageDeploy:
+    type: container-services:AppImageDeploy
+    properties:
+      dockerFilePath: ./app
+  # stacksettings:
+  #   type: stackmgmt:StackSettings
+
+outputs:
+  serviceUrl: http://${appImageDeploy.loadbalancerDnsName}
+
+config:
+  cpu:
+    type: integer
+    default: 256
+  memory:
+    type: integer
+    default: 512
+ 

@@ -1,0 +1,34 @@
+name: ${PROJECT}
+description: ${DESCRIPTION}
+runtime: yaml
+packages:
+  component-cloudfront-s3-cdk: git://github.com/pulumi-pequod/component-cloudfront-s3-cdk@v0.1.0
+  stackmgmt: https://github.com/pulumi-pequod/component-stackmgmt@v1.0.1
+template:
+  description: Pulumi YAML project that deploys an S3 with Cloudfront using AWS CDK constructs
+
+resources: 
+  # Create cloudfront and S3 bucket for website using 
+  # a component (written in typescript) that leverages an AWS CDK construct
+  cloudFront:
+    type: cloudfront-s3-cdk:CloudFrontS3
+    name: pequod-cf
+  # Populate the bucket with website content
+  index.html:
+    type: aws:s3:BucketObject
+    properties:
+      bucket: ${cloudFront.websiteBucketName}
+      source:
+        fn::fileAsset: ./www/index.html
+      contentType: text/html
+  favicon.png:
+    type: aws:s3:BucketObject
+    properties:
+      bucket: ${cloudFront.websiteBucketName}
+      source:
+        fn::fileAsset: ./www/favicon.ico
+      contentType: image/png
+  # stacksettings:
+  #   type: stackmgmt:StackSettings
+outputs: 
+  cloudFrontUrl: http://${cloudFront.cloudFrontDomain}
