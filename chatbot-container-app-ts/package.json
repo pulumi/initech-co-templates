@@ -6,7 +6,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@pulumi/container-app": "file:sdks/pulumi-container-app",
     "@pulumi/pulumi": "^3.0.0"
   }
 }
