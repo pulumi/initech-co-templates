@@ -1,0 +1,14 @@
+config:
+  template-test:department: Engineering
+  template-test:owner: Initech Engineering
+  template-test:openai_api_key:
+    secure: AAABAOWebn+ujfoiopMueueN5jf44Vl9HmTULiDeRKrln/Hf6R8ro9K+CL74lBQ=
+  aws:region: us-west-2
+  template-test:app_port: "8080"
+  template-test:app_path: ./app
+  template-test:environment: dev
+  template-test:desired_count: "1"
+  template-test:cpu: "256"
+  template-test:memory: "512"
+  template-test:system_prompt: You are a helpful AI assistant.
+  template-test:image: none
