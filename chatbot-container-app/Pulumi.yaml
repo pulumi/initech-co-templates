@@ -39,6 +39,9 @@ template:
       default: none
     owner:
       description: The owner tag value
+    department:
+      description: The department tag value
+      default: Engineering
 resources:
   # Create the container app using our component
   app:
@@ -50,6 +53,7 @@ resources:
       memory: ${memory}
       image: ${image}
       owner: ${owner}
+      department: ${department}
       env:
         ENVIRONMENT: ${environment}
         SYSTEM_PROMPT: ${system_prompt}
