@@ -18,7 +18,7 @@ openai = "^1.25"              # pin to a recent stable SDK
 # gunicorn = "^22.0"
 
 [tool.poetry.group.dev.dependencies]   # extras only needed locally
-pytest = "^8.0"
+pytest = ">=8,<10"
 ruff = "^0.3"                 # linting
 
 
